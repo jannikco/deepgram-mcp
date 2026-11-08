@@ -1,0 +1,21 @@
+{
+  "name": "deepgram-mcp",
+  "version": "0.2.0",
+  "description": "Inspect accessible projects and request history, then approve a single URL transcription. Long audio may exceed the bounded HTTP timeout; inspect request history before retrying an uncertain paid request.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "deepgram-mcp": "server.mjs"
+  },
+  "scripts": {
+    "start": "node example.mjs",
+    "server": "node server.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/server": "2.4.0"
+  }
+}
