@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-deepgram",
+      "description": "Connect AI agents to Deepgram using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-deepgram/SKILL.md": "02dba46ac2b6a84f02b4fe3a0f970907846dc7edb5f1f683bc00f529fc3d45be"
+  }
+}

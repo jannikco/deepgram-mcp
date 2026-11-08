@@ -2,322 +2,61 @@
   "schemaVersion": 1,
   "id": "deepgram-mcp",
   "kind": "provider-connector",
-  "artifactType": "connector",
-  "qualityVersion": 2,
+  "product": "pipmcp",
   "title": "Deepgram MCP server",
-  "description": "Inspect accessible projects and request history, then approve a single URL transcription. Long audio may exceed the bounded HTTP timeout; inspect request history before retrying an uncertain paid request.",
+  "description": "Use Deepgram with AI agents through one PipMCP API key, actual hosted schemas and governed execution.",
   "status": "ready",
   "verification": "mock-only",
   "releaseEligible": true,
+  "operationIds": [],
   "maintainer": "jannikco",
   "license": "MIT",
-  "product": "pipmcp",
-  "appSlug": "deepgram",
-  "appName": "Deepgram",
-  "operationIds": [
-    "list_projects",
-    "list_project_requests",
-    "transcribe_audio_url"
-  ],
-  "sourceRevision": "bfda4532a5d8ed6f495b3ef59cb0b4e927005b1d4f35b7bf527f23c1e138f2ec",
+  "attributionSlug": "github-deepgram-mcp",
+  "sourceRevision": "25ad17b66805b2a590cf479a89d9b1fb341f8eaa92947c63d03d34d4aadf3d8d",
+  "qualityVersion": 2,
+  "artifactType": "connector",
   "evidence": [
-    "Actual tools/call and direct-provider request contract tests"
+    "Gateway HTTP transport fixtures",
+    "Generated stdio wrapper discovery/call fixtures"
   ],
   "provenance": [
     "https://raw.githubusercontent.com/deepgram/deepgram-api-specs/main/openapi.yml"
   ],
-  "attributionSlug": "github-deepgram-mcp",
-  "connectorId": "deepgram",
-  "connector": {
-    "id": "deepgram",
-    "name": "Deepgram",
-    "version": "0.1.0",
-    "baseUrl": "https://api.deepgram.com",
-    "auth": {
-      "type": "header",
-      "env": "DEEPGRAM_API_KEY",
-      "header": "Authorization",
-      "prefix": "Token "
-    },
-    "description": "Inspect project requests and explicitly approve transcription of a supplied HTTPS audio URL. No binary upload or streaming transport.",
-    "tools": [
-      {
-        "name": "list_projects",
-        "description": "List projects accessible to the supplied API key.",
-        "method": "GET",
-        "path": "/v1/projects",
-        "readOnly": true,
-        "inputSchema": {
-          "type": "object",
-          "properties": {},
-          "required": [],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [],
-          "query": {},
-          "body": {}
-        },
-        "sampleArguments": {},
-        "provenance": [
-          "https://raw.githubusercontent.com/deepgram/deepgram-api-specs/main/openapi.yml"
-        ]
-      },
-      {
-        "name": "list_project_requests",
-        "description": "Review a project’s request history; page and limit are explicit, not automatically exhausted.",
-        "method": "GET",
-        "path": "/v1/projects/{project_id}/requests",
-        "readOnly": true,
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "project_id": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 128
-            },
-            "limit": {
-              "type": "integer",
-              "minimum": 1,
-              "maximum": 1000
-            },
-            "page": {
-              "type": "integer",
-              "minimum": 0,
-              "maximum": 100000
-            }
-          },
-          "required": [
-            "project_id"
-          ],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [
-            "project_id"
-          ],
-          "query": {
-            "limit": "limit",
-            "page": "page"
-          },
-          "body": {}
-        },
-        "sampleArguments": {
-          "project_id": "00000000-0000-4000-8000-000000000001",
-          "limit": 10,
-          "page": 0
-        },
-        "provenance": [
-          "https://raw.githubusercontent.com/deepgram/deepgram-api-specs/main/openapi.yml"
-        ]
-      },
-      {
-        "name": "transcribe_audio_url",
-        "description": "Billable URL transcription; explicit write approval required. Returns the provider JSON transcript; no file upload or realtime audio.",
-        "method": "POST",
-        "path": "/v1/listen",
-        "readOnly": false,
-        "inputSchema": {
-          "type": "object",
-          "properties": {
-            "url": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 2048,
-              "pattern": "^https://[^\\s]+$"
-            },
-            "model": {
-              "type": "string",
-              "minLength": 1,
-              "maxLength": 100
-            },
-            "smart_format": {
-              "type": "boolean"
-            }
-          },
-          "required": [
-            "url"
-          ],
-          "additionalProperties": false
-        },
-        "bindings": {
-          "path": [],
-          "query": {
-            "model": "model",
-            "smart_format": "smart_format"
-          },
-          "body": {
-            "url": "url"
-          }
-        },
-        "sampleArguments": {
-          "url": "https://static.deepgram.com/examples/Bueller-Life-moves-pretty-fast.wav",
-          "model": "nova-3",
-          "smart_format": true
-        },
-        "provenance": [
-          "https://raw.githubusercontent.com/deepgram/deepgram-api-specs/main/openapi.yml"
-        ]
-      }
-    ],
-    "provenance": [
-      "https://raw.githubusercontent.com/deepgram/deepgram-api-specs/main/openapi.yml"
-    ],
-    "sourceEvidence": [
-      {
-        "url": "https://raw.githubusercontent.com/deepgram/deepgram-api-specs/main/openapi.yml",
-        "sha256": "5100470da23c5f09029d53c40cb1796b40fb8fdff93afce719634209e770f374",
-        "checkedAt": "2026-11-08T13:24:07.469650+00:00",
-        "method": "https-get"
-      }
-    ],
-    "verification": "mock-only",
-    "providerLiveValidation": "not-run",
-    "workflow": {
-      "name": "Audit and transcribe approved audio",
-      "description": "Inspect accessible projects and request history, then approve a single URL transcription. Long audio may exceed the bounded HTTP timeout; inspect request history before retrying an uncertain paid request.",
-      "steps": [
-        "list_projects",
-        "list_project_requests",
-        "transcribe_audio_url"
-      ]
-    },
-    "repoId": "deepgram-mcp",
-    "appSlug": "deepgram",
-    "product": "pipmcp",
-    "artifactType": "connector",
-    "sourceRevision": "bfda4532a5d8ed6f495b3ef59cb0b4e927005b1d4f35b7bf527f23c1e138f2ec",
-    "capabilityEvidence": {
-      "local": {
-        "level": "Tested",
-        "operations": [
-          {
-            "name": "list_projects",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          },
-          {
-            "name": "list_project_requests",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          },
-          {
-            "name": "transcribe_audio_url",
-            "level": "Tested",
-            "evidenceRefs": [
-              "Provider request/stdio contract tests"
-            ],
-            "method": "contract-fixture"
-          }
-        ],
-        "evidenceRefs": [
-          "Provider request/stdio contract tests"
-        ],
-        "mode": "local"
-      },
-      "managed": {
-        "level": "Documented",
-        "operations": [
-          {
-            "name": "list_projects",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          },
-          {
-            "name": "list_project_requests",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          },
-          {
-            "name": "transcribe_audio_url",
-            "level": "Documented",
-            "evidenceRefs": [],
-            "method": "documentation"
-          }
-        ],
-        "evidenceRefs": [],
-        "mode": "managed"
-      }
-    },
-    "managedAvailability": {
-      "status": "listed",
-      "checkedAt": "2026-11-08T13:20:45.156456+00:00"
-    }
+  "utility": {
+    "problem": "Inspect accessible projects and request history, then approve a single URL transcription. Long audio may exceed the bounded HTTP timeout; inspect request history before retrying an uncertain paid request.",
+    "output": "Actual hosted tool schemas and durable governed execution receipts"
   },
+  "appSlug": "deepgram",
+  "appName": "Deepgram",
+  "connectorId": "deepgram",
+  "executionAuthority": "pipmcp-gateway",
+  "version": "1.0.0",
+  "agentReady": true,
   "capabilityEvidence": {
     "local": {
       "level": "Tested",
       "operations": [
         {
-          "name": "list_projects",
+          "name": "gateway_transport",
           "level": "Tested",
+          "method": "contract-fixture",
           "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
-        },
-        {
-          "name": "list_project_requests",
-          "level": "Tested",
-          "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
-        },
-        {
-          "name": "transcribe_audio_url",
-          "level": "Tested",
-          "evidenceRefs": [
-            "Provider request/stdio contract tests"
-          ],
-          "method": "contract-fixture"
+            "Generated gateway/stdio fixtures"
+          ]
         }
       ],
       "evidenceRefs": [
-        "Provider request/stdio contract tests"
+        "Generated gateway/stdio fixtures"
       ],
       "mode": "local"
     },
     "managed": {
       "level": "Documented",
-      "operations": [
-        {
-          "name": "list_projects",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        },
-        {
-          "name": "list_project_requests",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        },
-        {
-          "name": "transcribe_audio_url",
-          "level": "Documented",
-          "evidenceRefs": [],
-          "method": "documentation"
-        }
-      ],
+      "operations": [],
       "evidenceRefs": [],
       "mode": "managed"
     }
   },
-  "utility": {
-    "problem": "Inspect accessible projects and request history, then approve a single URL transcription. Long audio may exceed the bounded HTTP timeout; inspect request history before retrying an uncertain paid request.",
-    "output": "Actual provider API results through local MCP tools"
-  },
-  "providerDocs": "https://raw.githubusercontent.com/deepgram/deepgram-api-specs/main/openapi.yml",
   "factory": "leadadapter-pipmcp",
-  "generatorVersion": 2
+  "generatorVersion": 3
 }
